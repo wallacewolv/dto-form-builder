@@ -92,3 +92,10 @@ npm start
 - Para mais detalhes, veja os arquivos de implementação dos formulários:
   - **BookForm**
   - **MovieForm**
+
+## Exemplos Visuais
+
+<div align="center">
+  <img src="public/form-books.png" alt="BookForm" width="50%" style="margin-right: 10px;" />
+  <img src="public/form-movies.png" alt="MovieForm" width="45%" />
+</div>
