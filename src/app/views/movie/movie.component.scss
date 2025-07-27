@@ -1,0 +1,31 @@
+.movie-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.genres-label,
+.period-label,
+.comments-label {
+  font-weight: 500;
+}
+
+.genres-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.error-message {
+  color: #f44336;
+}
+
+.period-fields {
+  display: flex;
+  gap: 1rem;
+}
