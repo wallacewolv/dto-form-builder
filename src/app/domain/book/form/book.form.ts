@@ -42,7 +42,11 @@ export class BookForm extends FormGroup {
   }
 
   toDto(): CreateBookDto {
-    return this.getRawValue() as CreateBookDto;
+    const raw = this.getRawValue();
+    return {
+      ...raw,
+      genres: this.getGenres().value,
+    };
   }
 
   getGenres(): FormArray {

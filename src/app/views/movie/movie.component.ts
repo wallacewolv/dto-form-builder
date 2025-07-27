@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormArray, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -57,18 +57,11 @@ export class MovieComponent implements OnInit {
 
   onGenreChange(event: any, genre: string) {
     // Garante que sempre existe um array
-    const genres: string[] = this.form.get('genres')?.value || [];
-    if (event.checked) {
-      if (!genres.includes(genre)) {
-        genres.push(genre);
-      }
-    } else {
-      const idx = genres.indexOf(genre);
-      if (idx > -1) {
-        genres.splice(idx, 1);
-      }
+    const genresArray = this.form.get('genres') as FormArray;
+    const index = this.genres.indexOf(genre);
+    if (index >= 0) {
+      genresArray.at(index).setValue(event.checked);
+      genresArray.markAsTouched();
     }
-    this.form.get('genres')?.setValue([...genres]); // força nova referência
-    this.form.get('genres')?.markAsTouched();
   }
 }

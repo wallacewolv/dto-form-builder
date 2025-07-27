@@ -78,7 +78,11 @@ export class MovieForm extends FormGroup {
   }
 
   toDto(): CreateMovieDto {
-    return this.getRawValue() as CreateMovieDto;
+    const raw = this.getRawValue();
+    return {
+      ...raw,
+      genres: this.getSelectedGenres(),
+    };
   }
 
   getSelectedGenres(): string[] {
