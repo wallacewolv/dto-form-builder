@@ -1,9 +1,9 @@
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   inject,
-  signal,
+  input,
 } from '@angular/core';
 import { ReactiveFormsModule, FormArray, FormControl } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -13,44 +13,35 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 import { BookFormService } from '../../core/services/book-form.service';
 import { CreateBookDto } from '../../domain/book/dto/book.dto';
-import { BookCreateComponent } from './book-create.component';
-import { BookEditComponent } from './book-edit.component';
 
 @Component({
-  selector: 'app-book',
+  selector: 'app-book-edit',
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule,
     MatSlideToggleModule,
-    BookCreateComponent,
-    BookEditComponent,
+    MatButtonModule,
   ],
-  templateUrl: './book.component.html',
+  templateUrl: './book-form.html',
   styleUrl: './book.component.scss',
-  // Adiciona o serviço e melhora a performance com OnPush
   providers: [BookFormService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BookComponent {
+export class BookEditComponent {
+  bookData = input.required<Partial<CreateBookDto>>();
+
   private bookFormService = inject(BookFormService);
 
-  bookData: CreateBookDto = {
-    title: 'Exemplo de Livro',
-    author: 'Autor Exemplar',
-    genres: ['Ficção', 'Aventura'],
-    available: true,
-    price: 29.99,
-    publishedDate: '2023-01-01',
-  };
+  // O computed reage automaticamente ao valor do input `bookData`
+  // e recria o formulário.
+  form = computed(() =>
+    this.bookFormService.buildForm(this.bookData(), 'edit'),
+  );
 
-  // O formulário agora é um signal, inicializado pelo serviço
-  form = signal(this.bookFormService.buildForm({}, 'create'));
+  pageTitle = computed(() => `Editando: ${this.bookData().title}`);
 
-  // O getter para os gêneros fica mais simples e seguro
   get genres(): FormArray<FormControl<string>> {
     return this.form().controls.genres;
   }
@@ -63,10 +54,9 @@ export class BookComponent {
     if (this.form().valid) {
       const bookDto = this.bookFormService.toDto(this.form());
       // eslint-disable-next-line no-console
-      console.log('Livro salvo:', bookDto);
-      // Aqui você enviaria o DTO para sua API
+      console.log('Atualizando livro:', bookDto);
+      // Lógica para enviar para a API de atualização
     } else {
-      // Marca todos os campos como "tocados" para exibir os erros
       this.form().markAllAsTouched();
     }
   }

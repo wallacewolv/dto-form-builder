@@ -68,7 +68,7 @@ export class MovieForm extends FormGroup {
       'genres',
       new FormArray(
         MovieForm.GENRES.map(
-          (g) => new FormControl((data.genres || []).includes(g)),
+          (genre) => new FormControl((data.genres || []).includes(genre)),
         ),
         [atLeastOneGenreValidator],
       ),
@@ -87,7 +87,7 @@ export class MovieForm extends FormGroup {
 
   getSelectedGenres(): string[] {
     return MovieForm.GENRES.filter(
-      (_, i) => (this.get('genres') as FormArray).at(i).value,
+      (_, index) => (this.get('genres') as FormArray).at(index).value,
     );
   }
 
@@ -101,7 +101,7 @@ export class MovieForm extends FormGroup {
 }
 
 export function atLeastOneGenreValidator(formArray: AbstractControl) {
-  return (formArray as FormArray).controls.some((ctrl) => ctrl.value)
+  return (formArray as FormArray).controls.some((control) => control.value)
     ? null
     : { required: true };
 }

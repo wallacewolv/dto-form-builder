@@ -12,45 +12,31 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 import { BookFormService } from '../../core/services/book-form.service';
-import { CreateBookDto } from '../../domain/book/dto/book.dto';
-import { BookCreateComponent } from './book-create.component';
-import { BookEditComponent } from './book-edit.component';
 
 @Component({
-  selector: 'app-book',
+  selector: 'app-book-create',
   standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule,
     MatSlideToggleModule,
-    BookCreateComponent,
-    BookEditComponent,
+    MatButtonModule,
   ],
-  templateUrl: './book.component.html',
+  templateUrl: './book-form.html', // Reutilizaremos o mesmo HTML
   styleUrl: './book.component.scss',
-  // Adiciona o serviço e melhora a performance com OnPush
   providers: [BookFormService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BookComponent {
+export class BookCreateComponent {
   private bookFormService = inject(BookFormService);
 
-  bookData: CreateBookDto = {
-    title: 'Exemplo de Livro',
-    author: 'Autor Exemplar',
-    genres: ['Ficção', 'Aventura'],
-    available: true,
-    price: 29.99,
-    publishedDate: '2023-01-01',
-  };
-
-  // O formulário agora é um signal, inicializado pelo serviço
+  // O formulário é construído explicitamente no modo 'create'
   form = signal(this.bookFormService.buildForm({}, 'create'));
 
-  // O getter para os gêneros fica mais simples e seguro
+  pageTitle = signal<string>('Cadastrar Novo Livro');
+
   get genres(): FormArray<FormControl<string>> {
     return this.form().controls.genres;
   }
@@ -63,10 +49,9 @@ export class BookComponent {
     if (this.form().valid) {
       const bookDto = this.bookFormService.toDto(this.form());
       // eslint-disable-next-line no-console
-      console.log('Livro salvo:', bookDto);
-      // Aqui você enviaria o DTO para sua API
+      console.log('Criando novo livro:', bookDto);
+      // Lógica para enviar para a API de criação
     } else {
-      // Marca todos os campos como "tocados" para exibir os erros
       this.form().markAllAsTouched();
     }
   }
